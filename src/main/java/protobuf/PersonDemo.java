@@ -1,4 +1,5 @@
 package protobuf;
+import com.google.protobuf.Int32Value;
 import com.pro.grpc.models.Person;
 
 import java.io.File;
@@ -11,7 +12,7 @@ public class PersonDemo {
     public static void main(String[] args) throws IOException {
 //----------basics
         Person priyanshu = Person.newBuilder()
-                .setAge(10).setName("priyanshu").build();
+                .setAge(Int32Value.newBuilder().setValue(33).build()).setName("priyanshu").build();
 //        Person priyanshu2 = Person.newBuilder()
 //                .setAge(10).setName("Priyanshu").build();
 //
@@ -29,6 +30,8 @@ public class PersonDemo {
 
         Person newPriyanshu= Person.parseFrom(bytes);
         System.out.println(newPriyanshu);
+
+        System.out.println(priyanshu.hasAge());
 
 
     }

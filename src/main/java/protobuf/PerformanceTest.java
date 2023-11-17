@@ -2,6 +2,7 @@ package protobuf;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.Int32Value;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.pro.grpc.models.Person;
 import json.JPerson;
@@ -27,7 +28,7 @@ public class PerformanceTest {
 
         //protobuf
 
-        Person person = Person.newBuilder().setAge(33)
+        Person person = Person.newBuilder().setAge(Int32Value.newBuilder().setValue(33).build())
                 .setName("priyanshu")
                 .build();
         Runnable runnable2 = () -> {

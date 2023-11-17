@@ -1,5 +1,6 @@
 package protobuf;
 
+import com.google.protobuf.Int32Value;
 import com.pro.grpc.models.Address;
 import com.pro.grpc.models.BodyStyle;
 import com.pro.grpc.models.Car;
@@ -31,7 +32,7 @@ public class CompositionDemo {
         cars.add(car2);
         Person priyanshu = Person.newBuilder()
                 .setName("priyanshu")
-                .setAge(33)
+                .setAge(Int32Value.newBuilder().setValue(33).build())
                 .setAddress(address)
                 .addAllCar(cars)
                 .build();
