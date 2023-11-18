@@ -6,9 +6,16 @@ option java_multiple_files=true;
 message BalanceCheckRequest{
   int32  accountNumber=1;
 }
+message CreditDebitRequest{
+  int32  accountNumber=1;
+  int32  amount=2;
+}
 message  Balance{
   int32 amount=1;
 }
 service  BankService{
   rpc getBalance(BalanceCheckRequest) returns (Balance);
-}
+  rpc credit(CreditDebitRequest) returns (Balance);
+  rpc debit(CreditDebitRequest) returns (Balance);
+  rpc getData(BalanceCheckRequest) returns (stream Balance);
+ }
