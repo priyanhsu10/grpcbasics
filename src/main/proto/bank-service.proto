@@ -18,4 +18,6 @@ service  BankService{
   rpc credit(CreditDebitRequest) returns (Balance);
   rpc debit(CreditDebitRequest) returns (Balance);
   rpc getData(BalanceCheckRequest) returns (stream Balance);
+  //client side stream
+  rpc deposit(stream CreditDebitRequest) returns (Balance);
  }
