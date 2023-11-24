@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_package = "com.pro.grpc.models";
+option java_multiple_files = true;
+message TransferRequest{
+
+  int32  fromAccount = 1;
+  int32 toAccount = 2;
+  int32 amount = 3;
+}
+
+
+message  Account{
+  int32  account_number = 1;
+  int32  amount = 2;
+}
+
+enum  TransferStatus{
+  Failed = 0;
+  Success = 1;
+}
+
+message  TransferResponse{
+
+  TransferStatus status = 1;
+  Account from_account = 2;
+  Account to_account= 3;
+  int32  amount=4;
+
+}
+service  TransferService{
+  rpc transfer(stream TransferRequest) returns (stream TransferResponse);
+}
