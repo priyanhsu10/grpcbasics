@@ -67,11 +67,7 @@ class ResponseObserver implements StreamObserver<ServerResponse> {
     @Override
     public void onNext(ServerResponse serverResponse) {
 
-        if (serverResponse.getClientMessage().equals("---- win -----")) {
-            System.out.println(serverResponse.getClientMessage());
-            roleStreamObserver.onCompleted();
-            return;
-        }
+
         System.out.println("client: " + serverResponse.getClientMessage());
 
         System.out.println("------------------server----------------------");
