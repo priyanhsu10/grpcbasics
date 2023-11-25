@@ -59,7 +59,7 @@ class ResponseObserver implements StreamObserver<ServerResponse> {
         int diasNumber = new Random().ints(1, 7).findFirst().getAsInt();
         Role role = Role.newBuilder().setDiasNumber(diasNumber).build();
         System.out.println("------------------client----------------------");
-        System.out.println("client: Dias roled to  ="+diasNumber);
+        System.out.println("client: Dias role to  ="+diasNumber);
         roleStreamObserver.onNext(role);
 
     }
@@ -67,14 +67,15 @@ class ResponseObserver implements StreamObserver<ServerResponse> {
     @Override
     public void onNext(ServerResponse serverResponse) {
 
-
-        System.out.println("client: " + serverResponse.getClientMessage());
         if (serverResponse.getClientMessage().equals("---- win -----")) {
+            System.out.println(serverResponse.getClientMessage());
             roleStreamObserver.onCompleted();
             return;
         }
+        System.out.println("client: " + serverResponse.getClientMessage());
+
         System.out.println("------------------server----------------------");
-        System.out.println("server: Dias roled to  =" + serverResponse.getServerDiasNumber());
+        System.out.println("server: Dias role to  =" + serverResponse.getServerDiasNumber());
         System.out.println("server: " + serverResponse.getServerMessage());
         if (serverResponse.getServerMessage().equals("---- win -----")) {
             roleStreamObserver.onCompleted();

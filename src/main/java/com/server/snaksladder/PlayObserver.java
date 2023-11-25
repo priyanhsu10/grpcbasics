@@ -21,7 +21,7 @@ public class PlayObserver implements StreamObserver<Role> {
     @Override
     public void onNext(Role role) {
 
-
+//termination condition
         if (clientCurrentPosition >= 100 || serverCurrentPosition >= 100) {
             responseObserver.onCompleted();
         }
@@ -29,32 +29,54 @@ public class PlayObserver implements StreamObserver<Role> {
         int tempCurrentClientPos = clientCurrentPosition + role.getDiasNumber();
 
         Integer nextpostion = snakeladerMap.getOrDefault(tempCurrentClientPos, tempCurrentClientPos);
-        //ternmination conditon
+
         String clientMessage = null;
         String serverMessage = null;
         int diasNumber = new Random().ints(1, 7).findFirst().getAsInt();
         int tempCurrentServerPos = serverCurrentPosition + diasNumber;
-        Integer nextServertposition = snakeladerMap.getOrDefault(tempCurrentServerPos, tempCurrentServerPos);
-        if (nextpostion == 100) {
+        Integer nextServerPosition = snakeladerMap.getOrDefault(tempCurrentServerPos, tempCurrentServerPos);
+
+        if (nextpostion == 100 ||nextServerPosition == 100) {
             clientCurrentPosition = nextpostion;
-            clientMessage = "user: ---- win -----";
-            responseObserver.onNext(ServerResponse.newBuilder().setClientMessage(clientMessage)
-                    .setCurrentServerPosition(serverCurrentPosition)
-                    .setCurrentPosition(clientCurrentPosition)
-                    .build());
+            clientMessage = nextpostion==100? "cleint: ":"server: ";
+
+            clientMessage +=" ---- win -----";
+            responseObserver.onNext(createResponse(clientMessage));
             return;
         }
 
-        if (nextServertposition == 100) {
+        clientMessage = playClient(tempCurrentClientPos, nextpostion);
 
-            clientCurrentPosition = nextpostion;
-            serverMessage = "server: ---- win -----";
-            responseObserver.onNext(ServerResponse.newBuilder().setClientMessage(serverMessage)
-                    .setCurrentServerPosition(serverCurrentPosition)
-                    .setCurrentPosition(clientCurrentPosition)
-                    .build());
-            return;
+        serverMessage = playServer(tempCurrentServerPos, nextServerPosition);
+
+
+        ServerResponse serverResponse = createResponse(clientMessage, serverMessage, diasNumber);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+
+        responseObserver.onNext(serverResponse);
+
+    }
+
+    private String playServer(int tempCurrentServerPos, Integer nextServerPosition) {
+        String serverMessage;
+        if (nextServerPosition < 100) {
+
+            serverMessage = getClientMeesage(tempCurrentServerPos, nextServerPosition);
+            serverCurrentPosition = nextServerPosition;
+        } else {
+
+            serverMessage = getClientMeesage(serverCurrentPosition, serverCurrentPosition);
+
+        }
+        return serverMessage;
+    }
+
+    private String playClient(int tempCurrentClientPos, Integer nextpostion) {
+        String clientMessage;
         if (nextpostion < 100) {
 
             clientMessage = getClientMeesage(tempCurrentClientPos, nextpostion);
@@ -64,36 +86,21 @@ public class PlayObserver implements StreamObserver<Role> {
             clientMessage = getClientMeesage(clientCurrentPosition, clientCurrentPosition);
 
         }
+        return clientMessage;
+    }
 
-
-        // server tern
-
-
-        if (nextServertposition < 100) {
-
-            serverMessage = getClientMeesage(tempCurrentServerPos, nextServertposition);
-            serverCurrentPosition = nextServertposition;
-
-            //return current position and message
-        } else {
-
-            serverMessage = getClientMeesage(serverCurrentPosition, serverCurrentPosition);
-
-        }
-
-
-        ServerResponse serverResponse = ServerResponse.newBuilder().setClientMessage(clientMessage).setServerMessage(serverMessage)
+    private ServerResponse createResponse(String clientMessage, String serverMessage, int diasNumber) {
+        return ServerResponse.newBuilder().setClientMessage(clientMessage).setServerMessage(serverMessage)
                 .setCurrentPosition(clientCurrentPosition)
                 .setServerDiasNumber(diasNumber)
                 .setCurrentServerPosition(serverCurrentPosition).build();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    }
 
-        responseObserver.onNext(serverResponse);
-
+    private ServerResponse createResponse(String clientMessage) {
+        return ServerResponse.newBuilder().setClientMessage(clientMessage)
+                .setCurrentServerPosition(serverCurrentPosition)
+                .setCurrentPosition(clientCurrentPosition)
+                .build();
     }
 
     private static String getClientMeesage(int tempCurrentClientPos, Integer nextpostion) {
