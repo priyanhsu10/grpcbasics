@@ -9,11 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.nio.channels.Channel;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-
-import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TransferServiceTest {
 
@@ -35,8 +32,8 @@ public  void transferTest() throws InterruptedException {
     for(int i=0;i<=10;i++){
         int fromAccount= random.ints(1,10).findFirst().getAsInt();
         int toAccount= random.ints(1,10).findFirst().getAsInt();
-        int ammount= random.ints(1,100).findFirst().getAsInt();
-        TransferRequest request = TransferRequest.newBuilder().setFromAccount(fromAccount).setToAccount(toAccount).setAmount(ammount).build();
+        int amount= random.ints(1,100).findFirst().getAsInt();
+        TransferRequest request = TransferRequest.newBuilder().setFromAccount(fromAccount).setToAccount(toAccount).setAmount(amount).build();
         transfer.onNext(request);
     }
     transfer.onCompleted();
